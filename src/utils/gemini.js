@@ -7,7 +7,7 @@ if (!API_KEY) {
 }
 
 const genAI = new GoogleGenerativeAI(API_KEY);
-const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
+const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
 /**
  * Generate structured health advice using Gemini 1.5 Pro
