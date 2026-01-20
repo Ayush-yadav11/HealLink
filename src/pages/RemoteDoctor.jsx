@@ -67,6 +67,8 @@ const doctors = [
     },
     {
       name: 'Dr. Rahul Das',
+      specialty: 'Orthopedic Surgeon',
+      image: '/assets/doctors/rahul.jpg',
       verified: true,
       bio: 'Specialist in bone, joint, and spine care with surgical expertise.',
       availability: 'Tue-Thu, 9 AM - 1 PM',
