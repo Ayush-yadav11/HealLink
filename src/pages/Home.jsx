@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import {
   AppBar, Toolbar, Typography, Button, Box, Container,
-  TextField, IconButton, Grid, Switch, useTheme, Paper, Avatar, Tooltip,
+  TextField, IconButton, Grid, Switch, useTheme, Paper, Tooltip,
   Select, MenuItem
 } from '@mui/material';
 import MicIcon from '@mui/icons-material/Mic';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import { useNavigate } from 'react-router-dom';
 import useSpeechToText from '../hooks/useSpeechToText';
+import DoctorsList from '../components/DoctorsList';
 const translations = {
   English: {
    welcome: 'Welcome to HealLink AI',
@@ -48,6 +48,12 @@ const translations = {
     remoteDoctor: 'दूरस्थ डॉक्टर',
   },
 };
+const doctors = [
+  { id: 1, name: 'Dr. Emily Carter', specialty: 'General Medicine', status: 'Available', img: 'https://randomuser.me/api/portraits/women/44.jpg' },
+  { id: 2, name: 'Dr. Sarah Wilson', specialty: 'Pediatrics', status: 'Busy', img: 'https://randomuser.me/api/portraits/women/68.jpg' },
+  { id: 3, name: 'Dr. Raj Malhotra', specialty: 'Cardiology', status: 'Available', img: 'https://randomuser.me/api/portraits/men/77.jpg' },
+];
+
 const Home = ({ toggleTheme }) => {
   const [language, setLanguage] = useState('English')
   const theme = useTheme();
@@ -57,12 +63,6 @@ const Home = ({ toggleTheme }) => {
   const handleLanguageChange = (event) => {
     setLanguage(event.target.value);
   };
-
-  const doctors = [
-    { id: 1, name: 'Dr. Emily Carter', specialty: 'General Medicine', status: 'Available', img: 'https://randomuser.me/api/portraits/women/44.jpg' },
-    { id: 2, name: 'Dr. Sarah Wilson', specialty: 'Pediatrics', status: 'Busy', img: 'https://randomuser.me/api/portraits/women/68.jpg' },
-    { id: 3, name: 'Dr. Raj Malhotra', specialty: 'Cardiology', status: 'Available', img: 'https://randomuser.me/api/portraits/men/77.jpg' },
-  ];
 
   const { isListening, transcript, startListening, resetTranscript } = useSpeechToText();
   useEffect(() => {
@@ -157,20 +157,7 @@ const Home = ({ toggleTheme }) => {
             </Paper>
           </Grid>
           <Grid item xs={12} md={4}>
-            <Paper elevation={3} sx={{ p: 3, borderRadius: 3 }}><Typography variant="h6" sx={{ mb: 2 }}>{currentTranslations.topDoctors}</Typography>
-              {doctors.map((doc) => (
-                <Paper key={doc.id} elevation={1} sx={{ display: 'flex', alignItems: 'center', p: 2, mb: 2, borderRadius: 2 }}>
-                  <Avatar src={doc.img} alt={doc.name} sx={{ width: 56,  height: 56, mr: 2, borderRadius: 3 }} />
-                  <Box>
-                    <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                      {doc.name} <CheckCircleIcon fontSize="small" sx={{ color: 'green', verticalAlign: 'middle', ml: 0.5 }} />
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>{currentTranslations.specialty}</Typography>
-                    <Typography variant="body2" sx={{ color: doc.status === 'Available' ? 'green' : 'orange' }}>{doc.status ==='Available'? currentTranslations.available :currentTranslations.busy }</Typography>
-                  </Box>
-                </Paper>
-              ))}
-            </Paper>
+            <DoctorsList doctors={doctors} translations={currentTranslations} />
           </Grid>
         </Grid>
       </Box>
