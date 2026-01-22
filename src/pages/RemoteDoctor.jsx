@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Container,
   Typography,
@@ -91,6 +91,9 @@ const doctors = [
     },
   ];
 
+// Optimized: Hoisted static calculation outside component to prevent re-execution on every render
+const specialties = [...new Set(doctors.map((doc) => doc.specialty))];
+
 const RemoteDoctor = ({ toggleTheme, mode }) => {
   const navigate = useNavigate();
   const [showVerifiedOnly, setShowVerifiedOnly] = useState(false);
@@ -103,33 +106,20 @@ const RemoteDoctor = ({ toggleTheme, mode }) => {
   const handleBackToHome = () => {
     navigate('/');
   };
-  const Header = () => {
-    return (
-      <AppBar position="static" color="transparent" elevation={0}>
-        <Toolbar sx={{ justifyContent: 'space-between' }}>
-          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-            HeaLink<span style={{ color: '#1976D2' }}>AI</span>
-          </Typography>
-          <Button color="inherit" onClick={handleBackToHome}>Back to Home</Button>
-        </Toolbar>
-      </AppBar>
-    );
-  };
   
   const handleExpand = (index) => {
     setExpandedIndex((prev) => (prev === index ? null : index));
   };
 
-  const specialties = [...new Set(doctors.map((doc) => doc.specialty))];
-
-  const filteredDoctors = doctors.filter((doctor) => {
+  // Optimized: Memoized filtering logic to prevent expensive re-calculation on every render
+  const filteredDoctors = useMemo(() => doctors.filter((doctor) => {
     const matchesVerification = showVerifiedOnly ? doctor.verified : true;
     const matchesSearch =
       doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       doctor.specialty.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesSpecialty = selectedSpecialty ? doctor.specialty === selectedSpecialty : true;
     return matchesVerification && matchesSearch && matchesSpecialty;
-  });
+  }), [showVerifiedOnly, searchTerm, selectedSpecialty]);
 
   return (
     <Box>
